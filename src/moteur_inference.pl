@@ -1,14 +1,14 @@
 /*
 ================================================================================
-  MOTEUR D'INFÉRENCE
+  MOTEUR D'INFERENCE
   Fichier : moteur_inference.pl
-  Contenu : Logique de raisonnement et chaînage avant
+  Contenu : Logique de raisonnement et chainage avant
 ================================================================================
 */
 
 /*
 ================================================================================
-  1. INITIALISATION DU SYSTÈME
+  1. INITIALISATION DU SYSTEME
 ================================================================================
 */
 
@@ -17,12 +17,12 @@ initialiser :-
     retractall(environnement(_, _)),
     retractall(reponse_utilisateur(_, _)),
     write('=============================================='), nl,
-    write('   DÉMARRAGE DU DIAGNOSTIC'), nl,
+    write('   DEMARRAGE DU DIAGNOSTIC'), nl,
     write('=============================================='), nl, nl.
 
 /*
 ================================================================================
-  2. SÉLECTION DE LA PLANTE
+  2. SELECTION DE LA PLANTE
 ================================================================================
 */
 
@@ -35,7 +35,7 @@ selectionner_plante(Plante) :-
     write('Choix (1-4) : '),
     read(Choix),
     plante_correspondante(Choix, Plante),
-    format('~nVous avez sélectionné : ~w~n~n', [Plante]).
+    format('~nVous avez selectionne : ~w~n~n', [Plante]).
 
 plante_correspondante(1, tomate).
 plante_correspondante(2, pomme_terre).
@@ -48,7 +48,7 @@ plante_correspondante(4, concombre).
 ================================================================================
 */
 
-% Poser une question (avec mémorisation)
+% Poser une question (avec memorisation)
 poser_question(Question, Reponse) :-
     reponse_utilisateur(Question, Rep), !,
     Reponse = Rep.
@@ -61,11 +61,11 @@ poser_question(Question, Reponse) :-
 
 /*
 ================================================================================
-  4. VÉRIFICATION DES CONDITIONS
+  4. VERIFICATION DES CONDITIONS
 ================================================================================
 */
 
-% Vérification des symptômes
+% Verification des symptomes
 verifier_symptome(Symptome) :-
     symptome(Symptome, oui), !.
 
@@ -76,7 +76,7 @@ verifier_symptome(Symptome) :-
     assertz(symptome(Symptome, Reponse)),
     Reponse = oui.
 
-% Vérification de l'environnement
+% Verification de l'environnement
 verifier_environnement(Condition) :-
     environnement(Condition, oui), !.
 
@@ -89,14 +89,14 @@ verifier_environnement(Condition) :-
 
 /*
 ================================================================================
-  5. MOTEUR DE DIAGNOSTIC PRINCIPAL - VERSION SIMPLIFIÉE
+  5. MOTEUR DE DIAGNOSTIC PRINCIPAL - VERSION SIMPLIFIEE
 ================================================================================
 */
 
 diagnostiquer :-
     initialiser,
     selectionner_plante(Plante),
-    write('--- ANALYSE DES SYMPTÔMES ---'), nl, nl,
+    write('--- ANALYSE DES SYMPTOMES ---'), nl, nl,
     trouver_maladies(Plante, Maladies),
     afficher_resultats(Maladies).
 
@@ -106,7 +106,7 @@ trouver_maladies(Plante, Maladies) :-
             tester_maladie(Maladie, Plante),
             Maladies).
 
-% Tester chaque maladie spécifiquement
+% Tester chaque maladie specifiquement
 tester_maladie(mildiou_tomate, tomate) :-
     verifier_symptome(taches_brunes_feuilles),
     verifier_symptome(aureole_jaune),
@@ -160,47 +160,47 @@ tester_maladie(anthracnose_concombre, concombre) :-
 
 /*
 ================================================================================
-  6. AFFICHAGE DES RÉSULTATS
+  6. AFFICHAGE DES RESULTATS
 ================================================================================
 */
 
-% Cas où aucune maladie n'est identifiée
+% Cas ou aucune maladie n'est identifiee
 afficher_resultats([]) :-
     nl,
     write('==============================================='), nl,
-    write('  DIAGNOSTIC : Aucune maladie identifiée'), nl,
+    write('  DIAGNOSTIC : Aucune maladie identifiee'), nl,
     write('==============================================='), nl, nl,
-    write('Recommandations générales :'), nl,
-    write('- Vérifier irrigation et drainage'), nl,
-    write('- Examiner présence de parasites'), nl,
+    write('Recommandations generales :'), nl,
+    write('- Verifier irrigation et drainage'), nl,
+    write('- Examiner presence de parasites'), nl,
     write('- Analyser fertilisation'), nl,
-    write('- Consulter un agronome si problème persiste'), nl.
+    write('- Consulter un agronome si probleme persiste'), nl.
 
-% Cas où une ou plusieurs maladies sont identifiées
+% Cas ou une ou plusieurs maladies sont identifiees
 afficher_resultats([Maladie|Autres]) :-
     nl,
     write('==============================================='), nl,
     format('  DIAGNOSTIC : ~w~n', [Maladie]),
     write('==============================================='), nl, nl,
     
-    write('--- TRAITEMENT RECOMMANDÉ ---'), nl,
+    write('--- TRAITEMENT RECOMMANDE ---'), nl,
     traitement(Maladie, Traitements),
     afficher_liste(Traitements),
     
     (prevention(Maladie, Preventions) ->
-        (nl, write('--- PRÉVENTION FUTURE ---'), nl,
+        (nl, write('--- PREVENTION FUTURE ---'), nl,
          afficher_liste(Preventions))
     ; true),
     
     (Autres \= [] ->
-        (nl, write('⚠ ATTENTION : Autres maladies possibles :'), nl,
+        (nl, write('ATTENTION : Autres maladies possibles :'), nl,
          afficher_maladies(Autres))
     ; true).
 
-% Afficher une liste d'éléments
+% Afficher une liste d'elements
 afficher_liste([]).
 afficher_liste([H|T]) :-
-    format('  • ~w~n', [H]),
+    format('  * ~w~n', [H]),
     afficher_liste(T).
 
 % Afficher les noms de maladies

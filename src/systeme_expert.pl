@@ -1,8 +1,8 @@
 /*
 ================================================================================
-  SYSTÈME EXPERT : DIAGNOSTIC DES MALADIES DES PLANTES MARAÎCHÈRES
-  Fichier : systeme_expert.pl (Point d'entrée principal)
-  Module : Ingénierie de la Connaissance - GINF3
+  SYSTEME EXPERT : DIAGNOSTIC DES MALADIES DES PLANTES MARAICHERES
+  Fichier : systeme_expert.pl (Point d'entree principal)
+  Module : Ingenierie de la Connaissance - GINF3
   Domaine : Agriculture
   Langage : SWI-Prolog
 ================================================================================
@@ -24,26 +24,26 @@
 
 /*
 ================================================================================
-  POINT D'ENTRÉE PRINCIPAL
+  POINT D'ENTREE PRINCIPAL
 ================================================================================
 */
 
 demarrer :-
     write('=============================================='), nl,
-    write('   SYSTÈME EXPERT - DIAGNOSTIC MALADIES'), nl,
-    write('     Plantes Maraîchères (Tomate, Laitue,'), nl,
+    write('   SYSTEME EXPERT - DIAGNOSTIC MALADIES'), nl,
+    write('     Plantes Maraicheres (Tomate, Laitue,'), nl,
     write('         Pomme de terre, Concombre)'), nl,
     write('=============================================='), nl, nl,
     aide.
 
-% Message de bienvenue au démarrage
+% Message de bienvenue au demarrage
 :- initialization(demarrer).
 
 /*
 ================================================================================
   EXEMPLES D'UTILISATION :
   
-  Pour lancer le système :
+  Pour lancer le systeme :
   ?- consulter.
   
   Pour voir les maladies disponibles :
