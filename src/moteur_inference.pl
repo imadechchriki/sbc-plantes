@@ -89,7 +89,7 @@ verifier_environnement(Condition) :-
 
 /*
 ================================================================================
-  5. MOTEUR DE DIAGNOSTIC PRINCIPAL - VERSION SIMPLIFIEE
+  5. MOTEUR DE DIAGNOSTIC PRINCIPAL - UTILISE BASE_CONNAISSANCES.PL
 ================================================================================
 */
 
@@ -101,62 +101,38 @@ diagnostiquer :-
     afficher_resultats(Maladies).
 
 % Trouver toutes les maladies possibles pour une plante
+% UTILISE LES REGLES maladie/2 DE base_connaissances.pl
 trouver_maladies(Plante, Maladies) :-
     findall(Maladie, 
-            tester_maladie(Maladie, Plante),
+            verifier_maladie(Maladie, Plante),
             Maladies).
 
-% Tester chaque maladie specifiquement
-tester_maladie(mildiou_tomate, tomate) :-
-    verifier_symptome(taches_brunes_feuilles),
-    verifier_symptome(aureole_jaune),
-    verifier_environnement(humidite_elevee),
-    verifier_environnement(temperature_fraiche).
+% Verifie qu'une maladie correspond (toutes conditions vraies)
+verifier_maladie(Maladie, Plante) :-
+    maladie(Maladie, Plante),           % Regle de base_connaissances.pl
+    verifier_toutes_conditions(Maladie, Plante).
 
-tester_maladie(fusariose_tomate, tomate) :-
-    verifier_symptome(flechissement_plante),
-    verifier_symptome(jaunissement_unilateral),
-    verifier_symptome(brunissement_vasculaire).
+% Verifie toutes les conditions d'une regle maladie/2
+verifier_toutes_conditions(Maladie, Plante) :-
+    clause(maladie(Maladie, Plante), Body),
+    verifier_body(Body).
 
-tester_maladie(oidium_tomate, tomate) :-
-    verifier_symptome(poudre_blanche),
-    verifier_symptome(deformation_feuilles),
-    verifier_environnement(temps_sec).
+% Parcours recursif du corps de regle (Body)
+verifier_body(true) :- !.
 
-tester_maladie(alternariose_tomate, tomate) :-
-    verifier_symptome(taches_circulaires_brunes),
-    verifier_symptome(cercles_concentriques),
-    verifier_symptome(chute_feuilles).
+verifier_body((A, B)) :- 
+    !,
+    verifier_body(A), 
+    verifier_body(B).
 
-tester_maladie(mildiou_pomme_terre, pomme_terre) :-
-    verifier_symptome(taches_brunes_feuilles),
-    verifier_symptome(pourriture_tubercules),
-    verifier_environnement(humidite_elevee).
+verifier_body(symptome(S, oui)) :- 
+    verifier_symptome(S).
 
-tester_maladie(gale_commune, pomme_terre) :-
-    verifier_symptome(lesions_liegeuses_tubercules),
-    verifier_symptome(croutes_brunes),
-    verifier_environnement(sol_alcalin).
+verifier_body(environnement(E, oui)) :- 
+    verifier_environnement(E).
 
-tester_maladie(sclerotinia_laitue, laitue) :-
-    verifier_symptome(pourriture_molle),
-    verifier_symptome(mycellium_blanc),
-    verifier_environnement(humidite_elevee).
-
-tester_maladie(mildiou_laitue, laitue) :-
-    verifier_symptome(taches_jaunes_feuilles),
-    verifier_symptome(duvet_gris),
-    verifier_environnement(temperature_fraiche).
-
-tester_maladie(oidium_concombre, concombre) :-
-    verifier_symptome(poudre_blanche),
-    verifier_symptome(taches_jaunes),
-    verifier_environnement(temps_sec).
-
-tester_maladie(anthracnose_concombre, concombre) :-
-    verifier_symptome(taches_circulaires),
-    verifier_symptome(lesions_fruits),
-    verifier_environnement(humidite_elevee).
+verifier_body(\+ Cond) :-  % Gestion negation (ex: fusariose)
+    \+ verifier_body(Cond).
 
 /*
 ================================================================================
